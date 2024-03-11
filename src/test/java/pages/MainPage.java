@@ -16,28 +16,29 @@ public class MainPage extends BasePage{
          *     Используется AjaxElementLocatorFactory для ожидания элементов до их появления на странице в течение указанного времени
          */
     }
-        /**
-          * Возвращаем объект страницы в зависимости от переданного параметра
-          * @param topMenuItem - параметр, который получаем из enum TopMenuItem
-          * @return Любой тип, наследованый от BasePage
-          * @param <T> Это обобщённый тип данных.
-          */
 
-        public <T extends BasePage> T openTopMenu(String topMenuItem){ //  <T extends BasePage>: Это обобщённый тип данных. Он объявляет тип T,который является подтипом класса BasePage.
-            WebElement menuItem = driver.findElement(By.xpath("//a[contains(text(),'"+ topMenuItem+"')]"));
-            menuItem.click();
+    /**
+     * Возвращаем объект страницы в зависимости от переданного параметра
+     * @param topMenuItem - параметр, который получаем из enum TopMenuItem
+     * @return Любой тип, наследованый от BasePage
+     * @param <T> Это обобщённый тип данных.
+     */
+    public static <T extends BasePage> T openTopMenu(String topMenuItem){ //  <T extends BasePage>: Это обобщённый тип данных. Он объявляет тип T,который является подтипом класса BasePage.
+        WebElement menuItem = driver.findElement(By.xpath("//a[contains(text(),'"+topMenuItem+"')]"));
+        menuItem.click();
 
-            switch (topMenuItem){
-                case "HOME":
-                    return (T) new HomePage(driver); // new HomePage(driver): Это оператор создания нового объекта класса HomePage. Здесь driver передается в качестве аргумента конструктору класса HomePage. пример использования обобщенного программирования в Java // (T): Это оператор приведения типа (type casting). В данном случае (T) означает, что мы приводим созданный объект к типу T.
-                case "ABOUT":
-                    return (T) new AboutPage(driver);// тоже , что и с new HomePage(driver)
-                case "LOGIN":
-                    return (T) new LoginPage(driver);// тоже , что и с new HomePage(driver)
+        switch (topMenuItem){
+            case "HOME":
+                return (T) new HomePage(driver); // new HomePage(driver): Это оператор создания нового объекта класса HomePage. Здесь driver передается в качестве аргумента конструктору класса HomePage. пример использования обобщенного программирования в Java // (T): Это оператор приведения типа (type casting). В данном случае (T) означает, что мы приводим созданный объект к типу T.
+            case "ABOUT":
+                return (T) new AboutPage(driver);// тоже , что и с new HomePage(driver)
+            case "LOGIN":
+                return (T) new LoginPage(driver);// тоже , что и с new HomePage(driver)
+            case "ADD" :
+                return (T) new AddPage(driver);
 
-                default: throw new IllegalArgumentException("Somethings wrong"+ topMenuItem);
-            }
-
+            default: throw new IllegalArgumentException("Somethings wrong"+ topMenuItem);
         }
 
+    }
 }
