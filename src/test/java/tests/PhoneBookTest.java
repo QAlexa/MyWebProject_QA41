@@ -6,6 +6,7 @@ import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import model.Contact;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 import org.testng.annotations.Optional;
@@ -67,17 +68,19 @@ public class PhoneBookTest extends BaseTest {
     @Description("Registration successful")
 
     public void testRegistrationSuccess() throws Exception {
-        int i = (int) (System.currentTimeMillis() / 1000) % 3600;
-       // Allure description("New Registration, user is not registered ");
+
+        //Allure description("New Registration, user is not registered ");
         MainPage mainPage = new MainPage(getDriver());
         Allure.step("Step 1");
         LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
         Allure.step("Step 2");
-        lpage.fillEmailField("Qwer"+i+"@gmail.com")
-                .fillPasswordField("Qwerty1$")
+        lpage.fillEmailField(EmailGenerator.generateEmail(5,1,3))
+                .fillPasswordField(PasswordStringGenerator.generateString())
                 .clickByRegistartionBUtton();
-
-        //Assert.assertTrue()
+        Allure.step("Step 3");
+        Allure.step("Step 3");
+        Assert.assertTrue(new ContactsPage().isElementPresent(By.xpath("//button")));
+        TakeScreen.takeScreenshot("screening");
 
 
 

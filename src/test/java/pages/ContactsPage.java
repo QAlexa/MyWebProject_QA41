@@ -17,9 +17,10 @@ public class ContactsPage extends  BasePage{
 
     @FindBy(xpath = "//button[contains(text(),'Sign')]")
     WebElement signOutButton;
+    public ContactsPage() {
 
-    @FindBy(xpath = "//div[contains(.,'No Contacts here!')]")
-    WebElement banner;
+    }
+
 
     public ContactsPage(WebDriver driver){
         setDriver(driver);
@@ -70,6 +71,13 @@ public class ContactsPage extends  BasePage{
         listContact.setDescription(elementDescriptionValue);
         boolean result = listContact.equals(contact); // Выполняется сравнение переданного объекта Contact с объектом listContact, созданным на основе данных, полученных со страницы.
         return result; // Метод возвращает результат сравнения в виде логического значения true или false.
+    }
+
+    public boolean isElementPresent(By locator){
+
+        return driver.findElements(locator).size()>0;
+
+
     }
 
 }
