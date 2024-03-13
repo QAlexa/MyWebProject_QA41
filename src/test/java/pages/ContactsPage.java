@@ -13,6 +13,8 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 
+import static org.openqa.selenium.devtools.v118.debugger.Debugger.pause;
+
 public class ContactsPage extends  BasePage{
 
     @FindBy(xpath = "//button[contains(text(),'Sign')]")
@@ -77,7 +79,21 @@ public class ContactsPage extends  BasePage{
 
         return driver.findElements(locator).size()>0;
 
+    }
+
+    public static int removeOneContact() throws InterruptedException {
+        int countBefore = countContacts();
+        driver.findElement(By.xpath("//div[@class='contact-item_card__2SOIM']")).click();
+        driver.findElement(By.xpath("//button[.='Remove']")).click();
+        Thread.sleep(1000);
+        int countAfter = countContacts();
+        return countAfter - countBefore;
 
     }
+
+    public static int countContacts(){
+        return driver.findElements(By.xpath("//div[@class='contact-item_card__2SOIM']")).size();
+    }
+
 
 }

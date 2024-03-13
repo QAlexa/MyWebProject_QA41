@@ -69,7 +69,7 @@ public class PhoneBookTest extends BaseTest {
 
     public void testRegistrationSuccess() throws Exception {
 
-        //Allure description("New Registration, user is not registered ");
+        Allure.description("New Registration, user is not registered ");
         MainPage mainPage = new MainPage(getDriver());
         Allure.step("Step 1");
         LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
@@ -78,11 +78,24 @@ public class PhoneBookTest extends BaseTest {
                 .fillPasswordField(PasswordStringGenerator.generateString())
                 .clickByRegistartionBUtton();
         Allure.step("Step 3");
-        Allure.step("Step 3");
         Assert.assertTrue(new ContactsPage().isElementPresent(By.xpath("//button")));
-        TakeScreen.takeScreenshot("screening");
-
-
-
+        TakeScreen.takeScreenshot("screenReg");
     }
+
+
+    @Test
+    public void removeOneContactPositive() throws InterruptedException {
+        Allure.description("User already exist. Login and delete contact.!");
+        MainPage mainPage = new MainPage(getDriver());
+        Allure.step("Step 1 Login");
+        LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+        Allure.step("Step 2 Fill Login Form");
+        lpage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+                .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+                .clickByLoginButton();
+        Allure.step("Step 3 Remove Contact");
+        int res = ContactsPage.removeOneContact();
+        Assert.assertEquals(-1, res);
+    }
+
 }
