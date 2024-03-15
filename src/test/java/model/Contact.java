@@ -1,5 +1,6 @@
 package model;
 
+import java.io.*;
 import java.util.Objects;
 
 public class Contact {
@@ -94,5 +95,23 @@ public class Contact {
     @Override
     public int hashCode() {
         return Objects.hash(name, LastName, phone, email, address, description);
+    }
+
+    public static  void serializeContact(Contact contact, String filename) throws IOException {
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(filename));
+        outputStream.writeObject(contact);
+    }
+
+    public static Contact deserializeContact(String fileName) throws IOException {
+        try (
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(fileName));) {
+            return (Contact) inputStream.readObject();
+        } catch ( IOException| ClassNotFoundException e) {
+            System.err.println("Error deserializing contact");
+            return null;
+            //throw new RuntimeException(e);
+        }
+
+
     }
 }
