@@ -17,6 +17,8 @@ import pages.ContactsPage;
 import pages.LoginPage;
 import pages.MainPage;
 
+import java.io.IOException;
+
 public class PhoneBookTest extends BaseTest {
 
     @Test(description = "The test checks the empty field warning declaration.")
@@ -97,5 +99,60 @@ public class PhoneBookTest extends BaseTest {
         int res = ContactsPage.removeOneContact();
         Assert.assertEquals(-1, res);
     }
+
+      @Test
+    public void deleteContactApproachTwo() throws IOException, InterruptedException {
+        String filename = "contactDataFile.ser";
+        MainPage mainPage = new MainPage(getDriver());
+        LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+          lpage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+                  .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+                  .clickByLoginButton();
+        MainPage.openTopMenu(TopMenuItem.ADD.toString());
+        AddPage addPage = new AddPage(getDriver());
+        Contact newContact = new Contact(NameAndLastNameGenerator.generateName()
+        , NameAndLastNameGenerator.generateLastName(),PhoneNumberGenerator.generatePhoneNumber()
+        , EmailGenerator.generateEmail(5,1,3), AddressGenerator.generateAddress(), "description"
+        );
+        addPage.fillFormAndSave(newContact);
+        Contact.serializeContact(newContact,filename);
+        ContactsPage contactsPage = new ContactsPage(getDriver());
+        Contact deserContact = Contact.deserializeContact(filename);
+          int res = ContactsPage.removeOneContact();
+          Assert.assertEquals(-1, res);
+
+
+      }
+
+    @Test
+    public void deleteContact() throws InterruptedException {
+        Allure.description("User already exist. Delete contact by phone number!");
+        MainPage mainPage = new MainPage(getDriver());
+        Allure.step("Step 1");
+        LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+        Allure.step("Step 2");
+        lpage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+                .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+                .clickByLoginButton();
+        ContactsPage contactsPage = new ContactsPage(getDriver());
+        Assert.assertNotEquals(contactsPage.deleteContactByPhoneNumberOrName("0123456789843"),
+                contactsPage.getContactsListSize(),"Contact lists are different");
+
+    }
+   @Test
+   @Description("User already exist. Registration")
+   public void registrationOfAnAlreadyRegisteredUser(){
+       Allure.description("Step 1");
+       MainPage mainPage = new MainPage(getDriver());
+       Allure.step("Open registrationPage");
+       LoginPage lpage = mainPage.openTopMenu(TopMenuItem.LOGIN.toString());
+       Allure.step("Fill registration form");
+       String expectedString = "User already exist";
+       Alert alert = lpage.fillEmailField(PropertiesReader.getProperty("existingUserEmail"))
+               .fillPasswordField(PropertiesReader.getProperty("existingUserPassword"))
+               .clickByRegistartionBUtton();
+       boolean isAlertHandled = AlertHandler.handleAlert(alert, expectedString);
+       Assert.assertTrue(isAlertHandled);
+   }
 
 }
